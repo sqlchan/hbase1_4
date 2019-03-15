@@ -32,7 +32,7 @@ public class CallQueueTooBigException extends IOException {
   }
 
   // Absence of this constructor prevents proper unwrapping of
-  // remote exception on the client side
+  // remote exception on the client side    缺少此构造函数会阻止在客户端正确展开远程异常
   public CallQueueTooBigException(String message) {
     super(message);
   }

@@ -22,7 +22,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
  * 
- * Failed to find .tableinfo file under table dir
+ * Failed to find .tableinfo file under table dir   在表目录下找不到.tableinfo文件
  *
  */
 @InterfaceAudience.Public

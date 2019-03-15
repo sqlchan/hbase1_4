@@ -24,7 +24,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 import java.io.IOException;
 
 /**
- * Thrown if the client can't connect to zookeeper
+ * Thrown if the client can't connect to zookeeper  如果客户端无法连接到zookeeper，则抛出
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

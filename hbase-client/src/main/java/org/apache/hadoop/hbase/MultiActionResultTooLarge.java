@@ -25,6 +25,8 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
  * Exception thrown when the result needs to be chunked on the server side.
  * It signals that retries should happen right away and not count against the number of
  * retries because some of the multi was a success.
+ * 当结果需要在服务器端分块时引发异常。
+ * 它表示重试应该立即发生，而不是计算重试的数量，因为其中一些重试是成功的。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

@@ -34,6 +34,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  * Encapsulates protobuf serialization/deserialization so we don't leak generated pb outside this
  * class.  Create an instance using createRegionTransition(EventType, byte[], ServerName).
  * <p>Immutable
+ * 处于过渡时期的地区的当前状态。保存区域在从脱机到打开等步骤中移动时的状态。由regionserver、master和zk包使用。
+ * 封装了protobuf序列化/反序列化，这样我们就不会在这个类之外泄漏生成的pb
  */
 @InterfaceAudience.Private
 public class RegionTransition {

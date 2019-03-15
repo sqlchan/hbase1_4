@@ -24,7 +24,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 import java.io.IOException;
 
 /**
- * Thrown if the master is not running
+ * Thrown if the master is not running  如果主进程不运行，则抛出
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

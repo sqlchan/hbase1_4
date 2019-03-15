@@ -30,6 +30,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  * same range. The list is indexed by the replicaId. This is an immutable list,
  * however mutation operations are provided which returns a new List via copy-on-write
  * (assuming small number of locations)
+ * 容器，用于保存与相同范围对应的{@link HRegionLocation}的列表。列表由replicaId索引。
+ * 这是一个不可变的列表，但是提供了变异操作，该操作通过写时复制(假设有少量位置)返回一个新列表
  */
 @InterfaceAudience.Private
 public class RegionLocations {

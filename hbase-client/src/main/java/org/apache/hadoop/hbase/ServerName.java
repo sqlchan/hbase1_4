@@ -43,6 +43,11 @@ import java.util.regex.Pattern;
  * servers on same hostname and port (startcode is usually timestamp of server startup). The
  * {@link #toString()} format of ServerName is safe to use in the  filesystem and as znode name
  * up in ZooKeeper.  Its format is:
+ * HBase ServerName的实例。
+ * 服务器名用于惟一地标识集群中的服务器实例，它由主机名、端口和startcode组成。
+ * startcode将在相同的主机名和端口上重新启动服务器(startcode通常是服务器启动的时间戳)。
+ * ServerName的{@link #toString()}格式在文件系统中使用是安全的，在ZooKeeper中作为znode名称使用也是安全的。它的格式是:
+ *
  * <code>&lt;hostname&gt; '{@link #SERVERNAME_SEPARATOR}' &lt;port&gt;
  * '{@link #SERVERNAME_SEPARATOR}' &lt;startcode&gt;</code>.
  * For example, if hostname is <code>www.example.org</code>, port is <code>1234</code>,

@@ -25,6 +25,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 /**
  * Thrown if a request is table schema modification is requested but
  * made for an invalid family name.
+ * 如果请求是表模式修改，但针对无效的姓进行了修改，则引发。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

@@ -40,6 +40,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  * Successful running of this application requires access to an active instance
  * of HBase. For install instructions for a standalone instance of HBase, please
  * refer to https://hbase.apache.org/book.html#quickstart
+ * 成功运行此应用程序需要访问HBase的活动实例。
+ * 有关HBase独立实例的安装说明，请参阅https://hbase.apache.org/book.html#quickstart
  */
 public final class HelloHBase {
 
@@ -52,7 +54,7 @@ public final class HelloHBase {
           = Bytes.toBytes("mySecondColumn");
   static final byte[] MY_ROW_ID = Bytes.toBytes("rowId01");
 
-  // Private constructor included here to avoid checkstyle warnings
+  // Private constructor included here to avoid checkstyle warnings 这里包含私有构造函数，以避免checkstyle警告
   private HelloHBase() {
   }
 
@@ -63,11 +65,13 @@ public final class HelloHBase {
      * ConnectionFactory#createConnection() automatically looks for
      * hbase-site.xml (HBase configuration parameters) on the system's
      * CLASSPATH, to enable creation of Connection to HBase via Zookeeper.
+     * ConnectionFactory＃createConnection（）自动在系统的CLASSPATH上查找hbase-site.xml（HBase配置参数），
+     * 以通过Zookeeper创建与HBase的连接。
      */
     try (Connection connection = ConnectionFactory.createConnection();
             Admin admin = connection.getAdmin()) {
 
-      admin.getClusterStatus(); // assure connection successfully established
+      admin.getClusterStatus(); // assure connection successfully established   确保连接成功建立
       System.out.println("\n*** Hello HBase! -- Connection has been "
               + "established via Zookeeper!!\n");
 
@@ -94,6 +98,7 @@ public final class HelloHBase {
   /**
    * Invokes Admin#createNamespace and Admin#createTable to create a namespace
    * with a table that has one column-family.
+   * 调用Admin＃createNamespace和Admin＃createTable来创建一个包含一个列族的表的命名空间。
    *
    * @param admin Standard Admin object
    * @throws IOException If IO problem encountered
@@ -119,6 +124,7 @@ public final class HelloHBase {
   /**
    * Invokes Table#put to store a row (with two new columns created 'on the
    * fly') into the table.
+   * 调用Table＃put来存储一行（在运行中创建两个新列）到表中。
    *
    * @param table Standard Table object (used for CRUD operations).
    * @throws IOException If IO problem encountered
@@ -143,6 +149,7 @@ public final class HelloHBase {
 
   /**
    * Invokes Table#get and prints out the contents of the retrieved row.
+   * 调用Table＃get并打印出检索到的行的内容。
    *
    * @param table Standard Table object
    * @throws IOException If IO problem encountered

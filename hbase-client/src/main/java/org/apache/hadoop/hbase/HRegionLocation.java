@@ -28,12 +28,19 @@ import org.apache.hadoop.hbase.util.Addressing;
  * i.e. the hostname and port, and *not* the regioninfo.  This means two
  * instances are the same if they refer to the same 'location' (the same
  * hostname and port), though they may be carrying different regions.
+ * 用于保存HRegionInfo的数据结构和托管HRegionServer的地址。
+ * 不可改变的。
+ * 可比，但我们只比较“位置”：即主机名和端口，*不是* regioninfo。
+ * 这意味着如果它们引用相同的“位置”（相同的主机名和端口），则两个实例是相同的，尽管它们可能携带不同的区域。
  *
  * On a big cluster, each client will have thousands of instances of this object, often
  *  100 000 of them if not million. It's important to keep the object size as small
  *  as possible.
+ *  在一个大型集群上，每个客户端将拥有该对象的数千个实例，如果不是百万个，通常会有10万个实例。
+ * 保持对象尺寸尽可能小是很重要的
  *
  * <br>This interface has been marked InterfaceAudience.Public in 0.96 and 0.98.
+ * 此接口已在0.96和0.98中标记为InterfaceAudience.Public
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

@@ -22,7 +22,7 @@ import org.apache.hadoop.hbase.classification.InterfaceAudience;
 import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
- * Thrown when a namespace can not be located
+ * Thrown when a namespace can not be located   无法定位命名空间时引发
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

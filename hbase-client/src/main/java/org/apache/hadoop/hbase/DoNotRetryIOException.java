@@ -23,7 +23,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 import org.apache.hadoop.hbase.HBaseIOException;
 
 /**
- * Subclass if exception is not meant to be retried: e.g.
+ * Subclass if exception is not meant to be retried: e.g.   如果不想重试异常，则返回子类
  * {@link org.apache.hadoop.hbase.UnknownScannerException}
  */
 @InterfaceAudience.Public

@@ -24,6 +24,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
  * Thrown when an operation requires the root and all meta regions to be online
+ * 当操作要求根目录和所有元区域处于联机状态时抛出
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

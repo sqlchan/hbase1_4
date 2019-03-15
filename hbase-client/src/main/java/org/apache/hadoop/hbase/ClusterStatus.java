@@ -48,21 +48,21 @@ import org.apache.hadoop.io.VersionedWritable;
 
 
 /**
- * Status information on the HBase cluster.
+ * Status information on the HBase cluster. HBase集群的状态信息。
  * <p>
- * <tt>ClusterStatus</tt> provides clients with information such as:
+ * <tt>ClusterStatus</tt> provides clients with information such as:    ClusterStatus为客户提供诸如此类的信息
  * <ul>
- * <li>The count and names of region servers in the cluster.</li>
- * <li>The count and names of dead region servers in the cluster.</li>
- * <li>The name of the active master for the cluster.</li>
- * <li>The name(s) of the backup master(s) for the cluster, if they exist.</li>
- * <li>The average cluster load.</li>
- * <li>The number of regions deployed on the cluster.</li>
- * <li>The number of requests since last report.</li>
+ * <li>The count and names of region servers in the cluster.</li>   群集中区域服务器的计数和名称。
+ * <li>The count and names of dead region servers in the cluster.</li>  群集中死区服务器的计数和名称。
+ * <li>The name of the active master for the cluster.</li>  群集的活动主服务器的名称。
+ * <li>The name(s) of the backup master(s) for the cluster, if they exist.</li> 他是集群备份主机的名称（如果存在）。
+ * <li>The average cluster load.</li>   平均集群负载。
+ * <li>The number of regions deployed on the cluster.</li>  群集上部署的区域数
+ * <li>The number of requests since last report.</li>   自上次报告以来的请求数。
  * <li>Detailed region server loading and resource usage information,
- *  per server and per region.</li>
- * <li>Regions in transition at master</li>
- * <li>The unique cluster ID</li>
+ *  per server and per region.</li>     每个服务器和每个区域的详细区域服务器加载和资源使用信息。
+ * <li>Regions in transition at master</li> 主人过渡的地区
+ * <li>The unique cluster ID</li>   唯一的群集ID
  * </ul>
  */
 @InterfaceAudience.Public

@@ -30,7 +30,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.Strings;
 
 /**
-  * Encapsulates per-region load metrics.
+  * Encapsulates per-region load metrics.   封装每个区域的负载指标。
   */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

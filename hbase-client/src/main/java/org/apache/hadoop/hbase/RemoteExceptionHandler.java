@@ -26,7 +26,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * An immutable class which contains a static method for handling
+ * An immutable class which contains a static method for handling   包含用于处理的静态方法的不可变类
  * org.apache.hadoop.ipc.RemoteException exceptions.
  */
 @InterfaceAudience.Private
@@ -38,6 +38,8 @@ public class RemoteExceptionHandler {
    * Examine passed Throwable.  See if its carrying a RemoteException. If so,
    * run {@link #decodeRemoteException(RemoteException)} on it.  Otherwise,
    * pass back <code>t</code> unaltered.
+   * 检查Throwable传递。看看它是否携带了一个RemoteException。如果是，运行{@link #decodeRemoteException(RemoteException)}。
+   * 否则，返回<code>t</code> unchanged。
    * @param t Throwable to examine.
    * @return Decoded RemoteException carried by <code>t</code> or
    * <code>t</code> unaltered.
@@ -72,6 +74,8 @@ public class RemoteExceptionHandler {
    * Converts org.apache.hadoop.ipc.RemoteException into original exception,
    * if possible. If the original exception is an Error or a RuntimeException,
    * throws the original exception.
+   * 将org.apache.hadoop.ipc。如果可能，将RemoteException转换为原始异常。
+   * 如果原始异常是错误或RuntimeException，则抛出原始异常。
    *
    * @param re original exception
    * @return decoded RemoteException if it is an instance of or a subclass of

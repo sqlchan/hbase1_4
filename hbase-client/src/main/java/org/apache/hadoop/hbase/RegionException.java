@@ -25,6 +25,8 @@ import org.apache.hadoop.hbase.HBaseIOException;
 /**
  * Thrown when something happens related to region handling.
  * Subclasses have to be more specific.
+ * 当与区域处理相关的事件发生时抛出。
+ * 子类必须更具体。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

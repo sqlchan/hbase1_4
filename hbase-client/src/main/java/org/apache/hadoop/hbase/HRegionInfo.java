@@ -53,22 +53,27 @@ import org.apache.hadoop.io.DataInputBuffer;
  * identifier (a timestamp) for differentiating between subset ranges (after region split)
  * and a replicaId for differentiating the instance for the same range and some status information
  * about the region.
+ * 有关某个地区的信息。
+ * 区域是表的整个键空间中的一系列键，用于区分子集范围（在区域分割之后）的标识符（时间戳）
+ * 和用于区分相同范围的实例的复制ID以及关于该区域的一些状态信息。
  *
- * The region has a unique name which consists of the following fields:
+ * The region has a unique name which consists of the following fields: 该区域具有唯一名称，该名称由以下字段组成
  * <ul>
- * <li> tableName   : The name of the table </li>
- * <li> startKey    : The startKey for the region. </li>
- * <li> regionId    : A timestamp when the region is created. </li>
+ * <li> tableName   : The name of the table </li>       表的名称
+ * <li> startKey    : The startKey for the region. </li>    该区域的startKey
+ * <li> regionId    : A timestamp when the region is created. </li>     创建区域时的时间戳
  * <li> replicaId   : An id starting from 0 to differentiate replicas of the same region range
  * but hosted in separated servers. The same region range can be hosted in multiple locations.</li>
- * <li> encodedName : An MD5 encoded string for the region name.</li>
+ * 从0开始的id，用于区分相同区域范围的副本，但托管在分离的服务器中。
+ * 相同的区域范围可以托管在多个位置
+ * <li> encodedName : An MD5 encoded string for the region name.</li>   encodedName：区域名称的MD5编码字符串
  * </ul>
  *
- * <br> Other than the fields in the region name, region info contains:
+ * <br> Other than the fields in the region name, region info contains: 除了区域名称中的字段，区域信息包含
  * <ul>
- * <li> endKey      : the endKey for the region (exclusive) </li>
- * <li> split       : Whether the region is split </li>
- * <li> offline     : Whether the region is offline </li>
+ * <li> endKey      : the endKey for the region (exclusive) </li>   该区域的endKey
+ * <li> split       : Whether the region is split </li> 该地区是否分裂
+ * <li> offline     : Whether the region is offline </li>   该地区是否离线
  * </ul>
  *
  * In 0.98 or before, a list of table's regions would fully cover the total keyspace, and at any
@@ -77,6 +82,10 @@ import org.apache.hadoop.io.DataInputBuffer;
  * correspond to multiple HRegionInfo's. These HRI's share the same fields however except the
  * replicaId field. If the replicaId is not set, it defaults to 0, which is compatible with the
  * previous behavior of a range corresponding to 1 region.
+ * 在0.98或之前，表的区域列表将完全覆盖总密钥空间，并且在任何时间点，行密钥始终属于单个区域，该区域托管在单个服务器中。
+ * 在0.99+中，一个区域可以有多个实例（称为副本），因此范围（或行）可以对应多个HRegionInfo。
+ * 除了replicaId字段之外，这些HRI共享相同的字段。
+ * 如果未设置replicaId，则默认为0，这与对应于1个区域的范围的先前行为兼容
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
@@ -86,6 +95,8 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
    * HConstants.META_VERSION. HRegionInfo.VERSION indicates the data structure's versioning
    * while HConstants.META_VERSION indicates the versioning of the serialized HRIs stored in
    * the hbase:meta table.
+   * HRegionInfo有两个版本：HRegionInfo.VERSION和HConstants.META_VERSION。
+HRegionInfo.VERSION表示数据结构的版本控制，而HConstants.META_VERSION表示存储在hbase：meta表中的序列化HRI的版本控制。
    *
    * Pre-0.92:
    *   HRI.VERSION == 0 and HConstants.META_VERSION does not exist
@@ -103,6 +114,8 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
    *
    * Versioning of HRegionInfo is deprecated. HRegionInfo does protobuf
    * serialization using RegionInfo class, which has it's own versioning.
+   * 不推荐使用HRegionInfo的版本控制。
+HRegionInfo使用RegionInfo类进行protobuf序列化，该类具有自己的版本控制。
    */
   @Deprecated
   public static final byte VERSION = 1;
@@ -112,6 +125,8 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
    * The new format for a region name contains its encodedName at the end.
    * The encoded name also serves as the directory name for the region
    * in the filesystem.
+   * 区域名称的新格式在末尾包含其encodedName。
+   * 编码名称还用作文件系统中区域的目录名称
    *
    * New region name format:
    *    &lt;tablename>,,&lt;startkey>,&lt;regionIdTimestamp>.&lt;encodedName>.
@@ -212,7 +227,8 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   private byte [] endKey = HConstants.EMPTY_BYTE_ARRAY;
   // This flag is in the parent of a split while the parent is still referenced
   // by daughter regions.  We USED to set this flag when we disabled a table
-  // but now table state is kept up in zookeeper as of 0.90.0 HBase.
+  // but now table state is kept up in zookeeper as of 0.90.0 HBase.此标志位于拆分的父级中，而父级仍由子区域引用。
+  //当我们禁用表时，我们使用了设置此标志但现在表状态在动态值守保持器中保持为0.90.0 HBase。
   private boolean offLine = false;
   private long regionId = -1;
   private transient byte [] regionName = HConstants.EMPTY_BYTE_ARRAY;
@@ -539,7 +555,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
 
 
   /**
-   * Gets the table name from the specified region name.
+   * Gets the table name from the specified region name.    从指定的区域名称中获取表名称。
    * Like {@link #getTableName(byte[])} only returns a {@link TableName} rather than a byte array.
    * @param regionName
    * @return Table name
@@ -700,7 +716,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * Get current table name of the region
+   * Get current table name of the region   获取该地区的当前表名称
    * @return TableName
    * @see #getTableName()
    */
@@ -736,7 +752,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * Return true if the given row falls in this region.
+   * Return true if the given row falls in this region. 如果给定行属于此区域，则返回true
    */
   public boolean containsRow(byte[] row) {
     return Bytes.compareTo(row, startKey) >= 0 &&
@@ -778,7 +794,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * @return True if this region is offline.
+   * @return True if this region is offline.    如果此区域脱机，则为True。
    */
   public boolean isOffline() {
     return this.offLine;
@@ -794,7 +810,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * @return True if this is a split parent region.
+   * @return True if this is a split parent region. 如果这是拆分父区域，则为True
    */
   public boolean isSplitParent() {
     if (!isSplit()) return false;
@@ -860,7 +876,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * @deprecated Use protobuf serialization instead.  See {@link #toByteArray()} and
+   * @deprecated Use protobuf serialization instead. 请改用protobuf序列化 See {@link #toByteArray()} and
    * {@link #toDelimitedByteArray()}
    */
   @Deprecated
@@ -877,7 +893,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
-   * @deprecated Use protobuf deserialization instead.
+   * @deprecated Use protobuf deserialization instead.  请改用protobuf反序列化
    * @see #parseFrom(byte[])
    */
   @Deprecated
@@ -1158,6 +1174,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
+   * 从列返回HRegionInfo对象
    * Returns HRegionInfo object from the column
    * HConstants.CATALOG_FAMILY:HConstants.REGIONINFO_QUALIFIER of the catalog
    * table Result.
@@ -1171,6 +1188,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
+   * 通过读取目录表Result的相应列返回子区域。
    * Returns the daughter regions by reading the corresponding columns of the catalog table
    * Result.
    * @param data a Result object from the catalog table scan
@@ -1349,6 +1367,7 @@ public class HRegionInfo implements Comparable<HRegionInfo> {
   }
 
   /**
+   * 检查两个区域是否相邻
    * Check whether two regions are adjacent
    * @param regionA
    * @param regionB

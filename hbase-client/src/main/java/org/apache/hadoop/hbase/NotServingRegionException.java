@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * Thrown by a region server if it is sent a request for a region it is not
  * serving.
+ * 如果向区域服务器发送其不提供服务的区域的请求，则由该区域服务器引发。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

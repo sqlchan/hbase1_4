@@ -63,12 +63,15 @@ import java.util.regex.Pattern;
 
 /**
  * Read/write operations on region and assignment information store in
- * <code>hbase:meta</code>.
+ * <code>hbase:meta</code>. 对hbase中存储的区域和赋值信息进行读写操作:meta
  *
  * Some of the methods of this class take ZooKeeperWatcher as a param. The only reason
  * for this is because when used on client-side (like from HBaseAdmin), we want to use
  * short-living connection (opened before each operation, closed right after), while
  * when used on HM or HRS (like in AssignmentManager) we want permanent connection.
+ * 该类的一些方法将ZooKeeperWatcher作为参数。这样做的唯一原因是，
+ * 当在客户端使用时(如来自HBaseAdmin)，我们希望使用短期连接(在每次操作之前打开，之后立即关闭)，
+ * 而在HM或hr上使用时(如在AssignmentManager中)，我们希望使用永久连接
  */
 @InterfaceAudience.Private
 public class MetaTableAccessor {
@@ -77,15 +80,21 @@ public class MetaTableAccessor {
    * HBASE-10070 adds a replicaId to HRI, meaning more than one HRI can be defined for the
    * same table range (table, startKey, endKey). For every range, there will be at least one
    * HRI defined which is called default replica.
+   * HBASE-10070向HRI添加了一个replicaId，这意味着可以为相同的表范围(表、startKey、endKey)定义多个HRI。
+   * 对于每个范围，将至少定义一个HRI，称为缺省副本。
    *
    * Meta layout (as of 0.98 + HBASE-10070) is like:
    * For each table range, there is a single row, formatted like:
    * <tableName>,<startKey>,<regionId>,<encodedRegionName>. This row corresponds to the regionName
    * of the default region replica.
+   * 元布局(0.98 + HBASE-10070)如下:
+对于每个表范围，都有一行，格式如下:tableName、startKey、regionId、encodedRegionName。这一行对应于默认区域副本的regionName。
    * Columns are:
    * info:regioninfo         => contains serialized HRI for the default region replica
+   * 包含用于默认区域副本的序列化HRI
    * info:server             => contains hostname:port (in string form) for the server hosting
    *                            the default regionInfo replica
+   *                            包含主机名:端口(以字符串形式)，用于承载默认的regionInfo副本的服务器
    * info:server_<replicaId> => contains hostname:port (in string form) for the server hosting the
    *                            regionInfo replica with replicaId
    * info:serverstartcode    => contains server start code (in binary long form) for the server
@@ -107,6 +116,7 @@ public class MetaTableAccessor {
    *
    * The actual layout of meta should be encapsulated inside MetaTableAccessor methods,
    * and should not leak out of it (through Result objects, etc)
+   * 元数据的实际布局应该封装在MetaTableAccessor方法中，并且不应该泄漏(通过结果对象等)
    */
 
   private static final Log LOG = LogFactory.getLog(MetaTableAccessor.class);
@@ -121,10 +131,11 @@ public class MetaTableAccessor {
       META_REGION_PREFIX, 0, len);
   }
 
-  /** The delimiter for meta columns for replicaIds &gt; 0 */
+  /** The delimiter for meta columns for replicaIds 复制辅助项的元列的分隔符&gt; 0 */
   protected static final char META_REPLICA_ID_DELIMITER = '_';
 
-  /** A regex for parsing server columns from meta. See above javadoc for meta layout */
+  /** A regex for parsing server columns from meta. See above javadoc for meta layout
+   * 用于从元数据解析服务器列的正则表达式。有关元布局，请参见上面的javadoc */
   private static final Pattern SERVER_COLUMN_PATTERN
     = Pattern.compile("^server(_[0-9a-fA-F]{4})?$");
 
@@ -134,6 +145,7 @@ public class MetaTableAccessor {
 
  /**
    * Performs a full scan of a <code>hbase:meta</code> table.
+  * 执行对<code>hbase:meta</code>表的完整扫描。
    * @return List of {@link org.apache.hadoop.hbase.client.Result}
    * @throws IOException
    */
@@ -171,6 +183,7 @@ public class MetaTableAccessor {
 
   /**
    * Callers should call close on the returned {@link Table} instance.
+   * 调用者应该对返回的{@link Table}实例调用close。
    * @param connection connection we're using to access Meta
    * @return An {@link Table} for <code>hbase:meta</code>
    * @throws IOException
@@ -189,6 +202,11 @@ public class MetaTableAccessor {
     // managed connections getting tables.  Leaving this as it is for now. Will
     // revisit when inclined to change all tests.  User code probaby makes use of
     // managed connections too so don't change it till post hbase 1.0.
+      /**
+       * 如果在“connection”中传递的是“managed”(即每隔两次测试使用一个表或一个HBaseAdmin和托管连接)，
+       * 则执行connection。getTable将抛出一个异常，说明您不能使用托管连接获取表。暂时保持现状。将在倾向于更改所有测试时重新访问。
+       * 用户代码可能也使用托管连接，所以在发布hbase 1.0之前不要更改它。
+       */
     //
     // There should still be a way to use this method with an unmanaged connection.
     if (connection instanceof ClusterConnection) {
@@ -200,7 +218,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * @param t Table to use (will be closed when done).
+   * @param t Table to use (will be closed when done).使用表格(完成后将关闭)
    * @param g Get to run
    * @throws IOException
    */
@@ -213,7 +231,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * Gets the region info and assignment for the specified region.
+   * Gets the region info and assignment for the specified region.  获取指定区域的区域信息和赋值
    * @param connection connection we're using
    * @param regionName Region to lookup.
    * @return Location and HRegionInfo for <code>regionName</code>
@@ -321,7 +339,7 @@ public class MetaTableAccessor {
 
   /**
    * Checks if the specified table exists.  Looks at the hbase:meta table hosted on
-   * the specified server.
+   * the specified server.  检查指定的表是否存在。查看托管在指定服务器上的hbase:meta表。
    * @param connection connection we're using
    * @param tableName table to check
    * @return true if the table exists in meta, false if not
@@ -331,7 +349,7 @@ public class MetaTableAccessor {
       final TableName tableName)
   throws IOException {
     if (tableName.equals(TableName.META_TABLE_NAME)) {
-      // Catalog tables always exist.
+      // Catalog tables always exist.   目录表始终存在
       return true;
     }
     // Make a version of ResultCollectingVisitor that only collects the first
@@ -369,7 +387,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * Gets all of the regions of the specified table.
+   * Gets all of the regions of the specified table.    获取指定表的所有区域。
    * @param zkw zookeeper connection to access meta table
    * @param connection connection we're using
    * @param tableName table we're looking for
@@ -383,7 +401,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * Gets all of the regions of the specified table.
+   * Gets all of the regions of the specified table.    获取指定表的所有区域。
    * @param zkw zookeeper connection to access meta table
    * @param connection connection we're using
    * @param tableName table we're looking for
@@ -577,7 +595,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * Performs a full scan of a catalog table.
+   * Performs a full scan of a catalog table.   执行目录表的完整扫描。
    * @param connection connection we're using
    * @param visitor Visitor invoked against each row.
    * @param startrow Where to start the scan. Pass null if want to begin scan
@@ -834,11 +852,11 @@ public class MetaTableAccessor {
   }
 
   /**
-   * Implementations 'visit' a catalog table row.
+   * Implementations 'visit' a catalog table row.   实现“访问”目录表行。
    */
   public interface Visitor {
     /**
-     * Visit the catalog table row.
+     * Visit the catalog table row. 访问catalog表行。
      * @param r A row from catalog table
      * @return True if we are to proceed scanning the table, else false if
      * we are to stop now.
@@ -989,7 +1007,7 @@ public class MetaTableAccessor {
   }
 
   /**
-   * @param t Table to use (will be closed when done).
+   * @param t Table to use (will be closed when done).  要使用的表(完成后将关闭)。
    * @param p put to make
    * @throws IOException
    */

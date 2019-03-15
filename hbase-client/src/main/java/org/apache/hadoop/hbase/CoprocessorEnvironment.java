@@ -27,7 +27,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.HTableInterface;
 
 /**
- * Coprocessor environment state.
+ * Coprocessor environment state.   协处理器环境状态。
  */
 @InterfaceAudience.Private
 public interface CoprocessorEnvironment {
@@ -38,7 +38,7 @@ public interface CoprocessorEnvironment {
   /** @return the HBase version as a string (e.g. "0.21.0") */
   String getHBaseVersion();
 
-  /** @return the loaded coprocessor instance */
+  /** @return the loaded coprocessor instance   加载的协处理器实例*/
   Coprocessor getInstance();
 
   /** @return the priority assigned to the loaded coprocessor */

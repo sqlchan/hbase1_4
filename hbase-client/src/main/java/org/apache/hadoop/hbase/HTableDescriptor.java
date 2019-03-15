@@ -61,6 +61,10 @@ import org.apache.hadoop.io.WritableComparable;
  * all the column families, is the table a catalog table, <code> -ROOT- </code> or
  * <code> hbase:meta </code>, if the table is read only, the maximum size of the memstore,
  * when the region split should occur, coprocessors associated with it etc...
+ *
+ * HTableDescriptor包含有关HBase表的详细信息，例如所有列系列的描述符，
+ * 表是目录表，<code> -ROOT- </ code>或<code> hbase：meta </ code>，如果表
+ * 是只读的，memstore的最大大小，当应该发生区域分割时，与之关联的协处理器等...
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
@@ -69,12 +73,13 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   private static final Log LOG = LogFactory.getLog(HTableDescriptor.class);
 
   /**
-   *  Changes prior to version 3 were not recorded here.
+   *  Changes prior to version 3 were not recorded here.    此处未记录版本3之前的更改。
    *  Version 3 adds metadata as a map where keys and values are byte[].
-   *  Version 4 adds indexes
-   *  Version 5 removed transactional pollution -- e.g. indexes
-   *  Version 6 changed metadata to BytesBytesPair in PB
-   *  Version 7 adds table-level configuration
+   *  3添加元数据作为映射，其中键和值为byte []。
+   *  Version 4 adds indexes    4添加索引
+   *  Version 5 removed transactional pollution -- e.g. indexes 5删除了交易污染 - 例如索引
+   *  Version 6 changed metadata to BytesBytesPair in PB    6在PB中将元数据更改为BytesBytesPair
+   *  Version 7 adds table-level configuration  7添加了表级配置
    */
   private static final byte TABLE_DESCRIPTOR_VERSION = 7;
 
@@ -84,6 +89,8 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
    * A map which holds the metadata information of the table. This metadata
    * includes values like IS_ROOT, IS_META, DEFERRED_LOG_FLUSH, SPLIT_POLICY,
    * MAX_FILE_SIZE, READONLY, MEMSTORE_FLUSHSIZE etc...
+   * 保存表的元数据信息的映射。
+   * 此元数据包括IS_ROOT，IS_META，DEFERRED_LOG_FLUSH，SPLIT_POLICY，MAX_FILE_SIZE，READONLY，MEMSTORE_FLUSHSIZE等值...
    */
   private final Map<ImmutableBytesWritable, ImmutableBytesWritable> values =
     new HashMap<ImmutableBytesWritable, ImmutableBytesWritable>();
@@ -92,6 +99,9 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
    * A map which holds the configuration specific to the table.
    * The keys of the map have the same names as config keys and override the defaults with
    * table-specific settings. Example usage may be for compactions, etc.
+   * 包含特定于表的配置的映射。
+   * 地图的键与配置键具有相同的名称，并使用特定于表的设置覆盖默认值。
+   * 示例用法可以用于压缩等。
    */
   private final Map<String, String> configuration = new HashMap<String, String>();
 
@@ -101,6 +111,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
    * <em>INTERNAL</em> Used by HBase Shell interface to access this metadata
    * attribute which denotes the maximum size of the store file after which
    * a region split occurs
+   * 由HBase Shell接口用于访问此元数据属性，该属性表示存储文件的最大大小，之后会发生区域分割
    *
    * @see #getMaxFileSize()
    */
@@ -115,6 +126,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by rest interface to access this metadata
    * attribute which denotes if the table is Read Only
+   * 由rest接口用于访问此元数据属性，该属性表示该表是否为只读
    *
    * @see #isReadOnly()
    */
@@ -125,6 +137,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by HBase Shell interface to access this metadata
    * attribute which denotes if the table is compaction enabled
+   * 由HBase Shell接口用于访问此元数据属性，该属性表示表是否已启用压缩
    *
    * @see #isCompactionEnabled()
    */
@@ -136,6 +149,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
    * <em>INTERNAL</em> Used by HBase Shell interface to access this metadata
    * attribute which represents the maximum size of the memstore after which
    * its contents are flushed onto the disk
+   * 由HBase Shell接口用于访问此元数据属性，该属性表示memstore的最大大小，之后将其内容刷新到磁盘上
    *
    * @see #getMemStoreFlushSize()
    */
@@ -148,6 +162,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by rest interface to access this metadata
    * attribute which denotes if the table is a -ROOT- region or not
+   * 由rest接口用于访问此元数据属性，该属性表示表是否为-ROOT-区域
    *
    * @see #isRootRegion()
    */
@@ -158,6 +173,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by rest interface to access this metadata
    * attribute which denotes if it is a catalog table, either
+   * 由rest接口用于访问此元数据属性，该属性表示它是否是目录表
    * <code> hbase:meta </code> or <code> -ROOT- </code>
    *
    * @see #isMetaRegion()
@@ -169,6 +185,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by HBase Shell interface to access this metadata
    * attribute which denotes if the deferred log flush option is enabled.
+   * 由HBase Shell接口用于访问此元数据属性，该属性表示是否启用了延迟日志刷新选项
    * @deprecated Use {@link #DURABILITY} instead.
    */
   @Deprecated
@@ -178,14 +195,14 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
     new ImmutableBytesWritable(Bytes.toBytes(DEFERRED_LOG_FLUSH));
 
   /**
-   * <em>INTERNAL</em> {@link Durability} setting for the table.
+   * <em>INTERNAL</em> {@link Durability} setting for the table.    设置表
    */
   public static final String DURABILITY = "DURABILITY";
   private static final ImmutableBytesWritable DURABILITY_KEY =
       new ImmutableBytesWritable(Bytes.toBytes("DURABILITY"));
 
   /**
-   * <em>INTERNAL</em> number of region replicas for the table.
+   * <em>INTERNAL</em> number of region replicas for the table. 表格的区域副本数量
    */
   public static final String REGION_REPLICATION = "REGION_REPLICATION";
   private static final ImmutableBytesWritable REGION_REPLICATION_KEY =
@@ -193,7 +210,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
 
   /**
    * <em>INTERNAL</em> flag to indicate whether or not the memstore should be replicated
-   * for read-replicas (CONSISTENCY =&gt; TIMELINE).
+   * for read-replicas (CONSISTENCY =&gt; TIMELINE).    标志，指示是否应该为read-replicas复制memstore
    */
   public static final String REGION_MEMSTORE_REPLICATION = "REGION_MEMSTORE_REPLICATION";
   private static final ImmutableBytesWritable REGION_MEMSTORE_REPLICATION_KEY =
@@ -202,6 +219,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em>INTERNAL</em> Used by shell/rest interface to access this metadata
    * attribute which denotes if the table should be treated by region normalizer.
+   * 由shell / rest接口用于访问此元数据属性，该属性表示是否应按区域规范化程序处理该表
    *
    * @see #isNormalizationEnabled()
    */
@@ -209,14 +227,15 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   private static final ImmutableBytesWritable NORMALIZATION_ENABLED_KEY =
     new ImmutableBytesWritable(Bytes.toBytes(NORMALIZATION_ENABLED));
 
-  /** Default durability for HTD is USE_DEFAULT, which defaults to HBase-global default value */
+  /** Default durability for HTD is USE_DEFAULT, which defaults to HBase-global default value
+   * HTD的默认持久性是USE_DEFAULT，默认为HBase-global默认值*/
   private static final Durability DEFAULT_DURABLITY = Durability.USE_DEFAULT;
 
   public static final String PRIORITY = "PRIORITY";
   private static final ImmutableBytesWritable PRIORITY_KEY =
     new ImmutableBytesWritable(Bytes.toBytes(PRIORITY));
 
-  /** Relative priority of the table used for rpc scheduling */
+  /** Relative priority of the table used for rpc scheduling 用于rpc调度的表的相对优先级*/
   private static final int DEFAULT_PRIORITY = HConstants.NORMAL_QOS;
 
   /*
@@ -234,22 +253,24 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
 
   /**
    * Constant that denotes whether the table is READONLY by default and is false
+   * 表示默认情况下表是否为READONLY且为false的常量
    */
   public static final boolean DEFAULT_READONLY = false;
 
   /**
-   * Constant that denotes whether the table is compaction enabled by default
+   * Constant that denotes whether the table is compaction enabled by default   默认情况下是否启用压缩表
    */
   public static final boolean DEFAULT_COMPACTION_ENABLED = true;
 
   /**
-   * Constant that denotes whether the table is normalized by default.
+   * Constant that denotes whether the table is normalized by default.  表是否默认为规范化。
    */
   public static final boolean DEFAULT_NORMALIZATION_ENABLED = false;
 
   /**
    * Constant that denotes the maximum default size of the memstore after which
    * the contents are flushed to the store files
+   * 常量，表示memstore的最大默认大小，在此之后内容将刷新到存储文件
    */
   public static final long DEFAULT_MEMSTORE_FLUSH_SIZE = 1024*1024*128L;
 
@@ -281,21 +302,21 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   }
 
   /**
-   * Cache of whether this is a meta table or not.
+   * Cache of whether this is a meta table or not.  缓存这是否是元表。
    */
   private volatile Boolean meta = null;
   /**
-   * Cache of whether this is root table or not.
+   * Cache of whether this is root table or not.是否是根表的缓存。
    */
   private volatile Boolean root = null;
 
   /**
-   * Durability setting for the table
+   * Durability setting for the table   表的耐久性设置
    */
   private Durability durability = null;
 
   /**
-   * Maps column family name to the respective HColumnDescriptors
+   * Maps column family name to the respective HColumnDescriptors   将列族名称映射到相应的HColumnDescriptors
    */
   private final Map<byte [], HColumnDescriptor> families =
     new TreeMap<byte [], HColumnDescriptor>(Bytes.BYTES_RAWCOMPARATOR);
@@ -303,6 +324,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   /**
    * <em> INTERNAL </em> Private constructor used internally creating table descriptors for
    * catalog tables, <code>hbase:meta</code> and <code>-ROOT-</code>.
+   * 私有构造函数用于在内部为目录表创建表描述符
    */
   @InterfaceAudience.Private
   protected HTableDescriptor(final TableName name, HColumnDescriptor[] families) {
@@ -329,8 +351,8 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   }
 
   /**
-   * Default constructor which constructs an empty object.
-   * For deserializing an HTableDescriptor instance only.
+   * Default constructor which constructs an empty object.  构造空对象的默认构造函数。
+   * For deserializing an HTableDescriptor instance only.   仅用于反序列化HTableDescriptor实例。
    * @deprecated As of release 0.96
    *             (<a href="https://issues.apache.org/jira/browse/HBASE-5453">HBASE-5453</a>).
    *             This will be removed in HBase 2.0.0.
@@ -342,7 +364,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   }
 
   /**
-   * Construct a table descriptor specifying a TableName object
+   * Construct a table descriptor specifying a TableName object 构造一个指定TableName对象的表描述符
    * @param name Table name.
    * @see <a href="HADOOP-1581">HADOOP-1581 HBASE: Un-openable tablename bug</a>
    */
@@ -809,10 +831,14 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
    * store file in that region, i.e. If the biggest store file grows beyond the
    * maxFileSize, then the region split is triggered. This defaults to a value of
    * 256 MB.
+   * 设置最大大小到一个区域后可以长到一个区域分裂被触发。区域大小由该区域中最大的存储文件的大小表示，
+   * 也就是说，如果最大的存储文件增长超过maxFileSize，则触发区域分割。默认值为256 MB。
    * <p>
    * This is not an absolute value and might vary. Assume that a single row exceeds
    * the maxFileSize then the storeFileSize will be greater than maxFileSize since
    * a single row cannot be split across multiple regions
+   * 这不是一个绝对值，可能会变化。假设一行超过了maxFileSize，
+   * 那么存储文件的大小将大于maxFileSize，因为单个行不能跨多个区域拆分
    * </p>
    *
    * @param maxFileSize The maximum file size that a store file can grow to
@@ -872,7 +898,7 @@ public class HTableDescriptor implements WritableComparable<HTableDescriptor> {
   }
 
   /**
-   * Adds a column family.
+   * Adds a column family.  添加列族。
    * For the updating purpose please use {@link #modifyFamily(HColumnDescriptor)} instead.
    * @param family HColumnDescriptor of family to add.
    */

@@ -51,26 +51,29 @@ import org.apache.hadoop.hbase.util.ByteStringer;
 /**
  * An HColumnDescriptor contains information about a column family such as the
  * number of versions, compression settings, etc.
+ * HColumnDescriptor包含有关列族的信息，例如版本数，压缩设置等。
  *
  * It is used as input when creating a table or adding a column.
+ * 它在创建表或添加列时用作输入
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
 public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> {
-  // For future backward compatibility
+  // For future backward compatibility  为了将来向后兼容
 
-  // Version  3 was when column names become byte arrays and when we picked up
-  // Time-to-live feature.  Version 4 was when we moved to byte arrays, HBASE-82.
-  // Version  5 was when bloom filter descriptors were removed.
-  // Version  6 adds metadata as a map where keys and values are byte[].
+  // Version  3 was when column names become byte arrays and when we picked up  版本3是列名称变为字节数组时以及当我们选择生存时间功能时。
+  // Time-to-live feature.  Version 4 was when we moved to byte arrays, HBASE-82.   版本4是我们移动到字节数组HBASE-82的时候
+  // Version  5 was when bloom filter descriptors were removed. 5是删除布隆过滤器描述符的时候。
+  // Version  6 adds metadata as a map where keys and values are byte[].    6添加元数据作为映射，其中键和值为byte []。
   // Version  7 -- add new compression and hfile blocksize to HColumnDescriptor (HBASE-1217)
-  // Version  8 -- reintroduction of bloom filters, changed from boolean to enum
-  // Version  9 -- add data block encoding
-  // Version 10 -- change metadata to standard type.
-  // Version 11 -- add column family level configuration.
+    // 7  - 向HColumnDescriptor添加新的compression和hfile blocksize（HBASE-1217）
+  // Version  8 -- reintroduction of bloom filters, changed from boolean to enum     重新引入bloom过滤器，从boolean更改为enum
+  // Version  9 -- add data block encoding  添加数据块编码
+  // Version 10 -- change metadata to standard type.    将元数据更改为标准类型
+  // Version 11 -- add column family level configuration.   添加列族级别配置。
   private static final byte COLUMN_DESCRIPTOR_VERSION = (byte) 11;
 
-  // These constants are used as FileInfo keys
+  // These constants are used as FileInfo keys  这些常量用作FileInfo键
   public static final String COMPRESSION = "COMPRESSION";
   public static final String COMPRESSION_COMPACT = "COMPRESSION_COMPACT";
   public static final String ENCODE_ON_DISK = // To be removed, it is not used anymore
@@ -78,10 +81,13 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
   public static final String DATA_BLOCK_ENCODING =
       "DATA_BLOCK_ENCODING";
   /**
-   * Key for the BLOCKCACHE attribute.
+   * Key for the BLOCKCACHE attribute.  BLOCKCACHE属性的键。
    * A more exact name would be CACHE_DATA_ON_READ because this flag sets whether or not we
    * cache DATA blocks.  We always cache INDEX and BLOOM blocks; caching these blocks cannot be
    * disabled.
+   * 更准确的名称是CACHE_DATA_ON_READ，因为该标志设置我们是否缓存DATA块。
+   * 我们总是缓存INDEX和BLOOM块;
+   * 无法禁用缓存这些块。
    */
   public static final String BLOCKCACHE = "BLOCKCACHE";
   public static final String CACHE_DATA_ON_WRITE = "CACHE_DATA_ON_WRITE";
@@ -90,17 +96,19 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
   public static final String EVICT_BLOCKS_ON_CLOSE = "EVICT_BLOCKS_ON_CLOSE";
   /**
    * Key for cache data into L1 if cache is set up with more than one tier.
-   * To set in the shell, do something like this:
+   * To set in the shell, do something like this:   如果缓存设置为多个层，则将缓存数据键入L1。
    * <code>hbase(main):003:0&gt; create 't',
    *    {NAME =&gt; 't', CONFIGURATION =&gt; {CACHE_DATA_IN_L1 =&gt; 'true'}}</code>
    */
   public static final String CACHE_DATA_IN_L1 = "CACHE_DATA_IN_L1";
 
   /**
-   * Key for the PREFETCH_BLOCKS_ON_OPEN attribute.
+   * Key for the PREFETCH_BLOCKS_ON_OPEN attribute. PREFETCH_BLOCKS_ON_OPEN属性的键。
    * If set, all INDEX, BLOOM, and DATA blocks of HFiles belonging to this
    * family will be loaded into the cache as soon as the file is opened. These
    * loads will not count as cache misses.
+   * 如果设置，则只要文件打开，属于该系列的所有HFILE的INDEX，BLOOM和DATA块都将加载到缓存中。
+   * 这些负载不会计为缓存未命中数。
    */
   public static final String PREFETCH_BLOCKS_ON_OPEN = "PREFETCH_BLOCKS_ON_OPEN";
 
@@ -108,6 +116,9 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    * Size of storefile/hfile 'blocks'.  Default is {@link #DEFAULT_BLOCKSIZE}.
    * Use smaller block sizes for faster random-access at expense of larger
    * indices (more memory consumption).
+   * storefile / hfile'blocks'的大小。
+   * 默认值为{@link #DEFAULT_BLOCKSIZE}。
+   * 使用较小的块大小可以更快地随机访问，但代价是更大的索引（更多的内存消耗）。
    */
   public static final String BLOCKSIZE = "BLOCKSIZE";
 
@@ -128,7 +139,7 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
   public static final short DEFAULT_DFS_REPLICATION = 0;
 
   /**
-   * Default compression type.
+   * Default compression type.默认压缩类型
    */
   public static final String DEFAULT_COMPRESSION =
     Compression.Algorithm.NONE.getName();
@@ -137,48 +148,53 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    * Default value of the flag that enables data block encoding on disk, as
    * opposed to encoding in cache only. We encode blocks everywhere by default,
    * as long as {@link #DATA_BLOCK_ENCODING} is not NONE.
+   * 在磁盘上启用数据块编码的标志的默认值，而不是仅在缓存中进行编码。
+   * 我们默认在任何地方编码块，只要{@link #DATA_BLOCK_ENCODING}不是NONE即可。
    */
   public static final boolean DEFAULT_ENCODE_ON_DISK = true;
 
-  /** Default data block encoding algorithm. */
+  /** Default data block encoding algorithm.    默认数据块编码算法*/
   public static final String DEFAULT_DATA_BLOCK_ENCODING =
       DataBlockEncoding.NONE.toString();
 
   /**
-   * Default number of versions of a record to keep.
+   * Default number of versions of a record to keep 要保留的记录的默认版本数.
    */
   public static final int DEFAULT_VERSIONS = HBaseConfiguration.create().getInt(
     "hbase.column.max.version", 1);
 
   /**
-   * Default is not to keep a minimum of versions.
+   * Default is not to keep a minimum of versions   默认情况下不保留最低版本.
    */
   public static final int DEFAULT_MIN_VERSIONS = 0;
 
   /*
    * Cache here the HCD value.
    * Question: its OK to cache since when we're reenable, we create a new HCD?
+   * 在此缓存HCD值。
+问题：可以缓存，因为当我们重新启用时，我们会创建一个新的HCD吗？
    */
   private volatile Integer blocksize = null;
 
   /**
    * Default setting for whether to try and serve this column family from memory or not.
+   * 是否尝试从内存中提供此列系列的默认设置。
    */
   public static final boolean DEFAULT_IN_MEMORY = false;
 
   /**
-   * Default setting for preventing deleted from being collected immediately.
+   * Default setting for preventing deleted from being collected immediately.   用于防止立即收集已删除的默认设置。
    */
   public static final KeepDeletedCells DEFAULT_KEEP_DELETED = KeepDeletedCells.FALSE;
 
   /**
-   * Default setting for whether to use a block cache or not.
+   * Default setting for whether to use a block cache or not    是否使用块缓存的默认设置.
    */
   public static final boolean DEFAULT_BLOCKCACHE = true;
 
   /**
    * Default setting for whether to cache data blocks on write if block caching
-   * is enabled.
+   * is enabled 如果启用了块缓存，则是否在写入时缓存数据块的默认设置.
    */
   public static final boolean DEFAULT_CACHE_DATA_ON_WRITE = false;
 
@@ -186,54 +202,58 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    * Default setting for whether to cache data blocks in L1 tier.  Only makes sense if more than
    * one tier in operations: i.e. if we have an L1 and a L2.  This will be the cases if we are
    * using BucketCache.
+   * 是否在L1层中缓存数据块的默认设置。
+   * 只有在操作中有多个层时才有意义：即，如果我们有L1和L2。
+   * 如果我们使用BucketCache就是这种情况
    */
   public static final boolean DEFAULT_CACHE_DATA_IN_L1 = false;
 
   /**
    * Default setting for whether to cache index blocks on write if block
-   * caching is enabled.
+   * caching is enabled.    如果启用了块缓存，是否在写入时缓存索引块的默认设置
    */
   public static final boolean DEFAULT_CACHE_INDEX_ON_WRITE = false;
 
   /**
-   * Default size of blocks in files stored to the filesytem (hfiles).
+   * Default size of blocks in files stored to the filesytem (hfiles).  存储到filesytem（hfiles）的文件中块的默认大小
    */
   public static final int DEFAULT_BLOCKSIZE = HConstants.DEFAULT_BLOCKSIZE;
 
   /**
-   * Default setting for whether or not to use bloomfilters.
+   * Default setting for whether or not to use bloomfilters.    是否使用bloomfilters的默认设置。
    */
   public static final String DEFAULT_BLOOMFILTER = BloomType.ROW.toString();
 
   /**
    * Default setting for whether to cache bloom filter blocks on write if block
-   * caching is enabled.
+   * caching is enabled.    如果启用了块缓存，是否在写入时缓存bloom过滤块的默认设置。
    */
   public static final boolean DEFAULT_CACHE_BLOOMS_ON_WRITE = false;
 
   /**
-   * Default time to live of cell contents.
+   * Default time to live of cell contents. 单元格内容的默认生存时间。
    */
   public static final int DEFAULT_TTL = HConstants.FOREVER;
 
   /**
-   * Default scope.
+   * Default scope. 默认范围。
    */
   public static final int DEFAULT_REPLICATION_SCOPE = HConstants.REPLICATION_SCOPE_LOCAL;
 
   /**
    * Default setting for whether to evict cached blocks from the blockcache on
-   * close.
+   * close. 是否在关闭时从blockcache中逐出缓存块的默认设置
    */
   public static final boolean DEFAULT_EVICT_BLOCKS_ON_CLOSE = false;
 
   /**
-   * Default compress tags along with any type of DataBlockEncoding.
+   * Default compress tags along with any type of DataBlockEncoding.    默认压缩标记以及任何类型的DataBlockEncoding
    */
   public static final boolean DEFAULT_COMPRESS_TAGS = true;
 
   /*
    * Default setting for whether to prefetch blocks into the blockcache on open.
+   * 是否在打开时将块预取到blockcache中的默认设置。
    */
   public static final boolean DEFAULT_PREFETCH_BLOCKS_ON_OPEN = false;
 
@@ -268,10 +288,10 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
 
   private static final int UNINITIALIZED = -1;
 
-  // Column family name
+  // Column family name 列族名称
   private byte [] name;
 
-  // Column metadata
+  // Column metadata    列元数据
   private final Map<ImmutableBytesWritable, ImmutableBytesWritable> values =
     new HashMap<ImmutableBytesWritable,ImmutableBytesWritable>();
 
@@ -279,11 +299,14 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    * A map which holds the configuration specific to the column family.
    * The keys of the map have the same names as config keys and override the defaults with
    * cf-specific settings. Example usage may be for compactions, etc.
+   * 包含特定于列族的配置的映射。
+   * 地图的键与配置键具有相同的名称，并使用cf-specific设置覆盖默认值。
+   * 示例用法可以用于压缩等。
    */
   private final Map<String, String> configuration = new HashMap<String, String>();
 
   /*
-   * Cache the max versions rather than calculate it every time.
+   * Cache the max versions rather than calculate it every time.    缓存最大版本而不是每次都计算它。
    */
   private int cachedMaxVersions = UNINITIALIZED;
 
@@ -296,7 +319,9 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    */
   @Deprecated
   // Make this private rather than remove after deprecation period elapses.  Its needed by pb
-  // deserializations.
+  // deserializations. 在弃用期过后，将其设为私有而不是删除。
+  //它需要通过pb反序列化。
+
   public HColumnDescriptor() {
     this.name = null;
   }
@@ -304,6 +329,7 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
   /**
    * Construct a column descriptor specifying only the family name
    * The other attributes are defaulted.
+   * 构造仅指定系列名称的列描述符     其他属性是默认的
    *
    * @param familyName Column family name. Must be 'printable' -- digit or
    * letter -- and may not contain a <code>:</code>
@@ -349,14 +375,14 @@ public class HColumnDescriptor implements WritableComparable<HColumnDescriptor> 
    * Constructor
    * @param familyName Column family name. Must be 'printable' -- digit or
    * letter -- and may not contain a <code>:</code>
-   * @param maxVersions Maximum number of versions to keep
-   * @param compression Compression type
+   * @param maxVersions Maximum number of versions to keep  要保留的最大版本数
+   * @param compression Compression type    压缩类型
    * @param inMemory If true, column data should be kept in an HRegionServer's
-   * cache
-   * @param blockCacheEnabled If true, MapFile blocks should be cached
-   * @param timeToLive Time-to-live of cell contents, in seconds
+   * cache      如果为true，则列数据应保存在HRegionServer的缓存中
+   * @param blockCacheEnabled If true, MapFile blocks should be cached  如果为true，则应缓存MapFile块
+   * @param timeToLive Time-to-live of cell contents, in seconds    细胞内容的生存时间，以秒为单位
    * (use HConstants.FOREVER for unlimited TTL)
-   * @param bloomFilter Bloom filter type for this column
+   * @param bloomFilter Bloom filter type for this column   此列的Bloom过滤器类型
    *
    * @throws IllegalArgumentException if passed a family name that is made of
    * other than 'word' characters: i.e. <code>[a-zA-Z_0-9]</code> or contains

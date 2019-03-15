@@ -25,7 +25,8 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
  * Returned to the clients when their request was discarded due to server being overloaded.
- * Clients should retry upon receiving it.
+ * 由于服务器过载而丢弃其请求时返回到客户端。
+ * Clients should retry upon receiving it.  客户应在收到后重试。
  */
 @SuppressWarnings("serial")
 @InterfaceAudience.Public
@@ -36,7 +37,7 @@ public class CallDroppedException extends IOException {
   }
 
   // Absence of this constructor prevents proper unwrapping of
-  // remote exception on the client side
+  // remote exception on the client side    缺少此构造函数会阻止在客户端正确展开远程异常
   public CallDroppedException(String message) {
     super(message);
   }

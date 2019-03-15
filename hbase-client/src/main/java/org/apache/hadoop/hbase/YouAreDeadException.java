@@ -27,6 +27,8 @@ import java.io.IOException;
  * This exception is thrown by the master when a region server reports and is
  * already being processed as dead. This can happen when a region server loses
  * its session but didn't figure it yet.
+ * 当区域服务器报告并已作为死状态处理时，主服务器将抛出此异常。
+ * 当区域服务器丢失了它的会话但还没有发现它时，就会发生这种情况。
  */
 @SuppressWarnings("serial")
 @InterfaceAudience.Private

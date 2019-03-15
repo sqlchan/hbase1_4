@@ -39,6 +39,7 @@ import java.util.TreeSet;
 
 /**
  * This class is used for exporting current state of load on a RegionServer.
+ * 该类用于导出一个RegionServer上的当前负载状态。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

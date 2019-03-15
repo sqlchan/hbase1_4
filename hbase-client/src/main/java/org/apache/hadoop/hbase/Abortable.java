@@ -23,24 +23,27 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
  * Interface to support the aborting of a given server or client.
+ * 用于支持中止给定服务器或客户端的接口。
  * <p>
  * This is used primarily for ZooKeeper usage when we could get an unexpected
  * and fatal exception, requiring an abort.
+ * 当我们遇到意外和致命的异常，需要中止时，这主要用于ZooKeeper的使用。
  * <p>
  * Implemented by the Master, RegionServer, and TableServers (client).
+ * 由Master，RegionServer和TableServers（客户端）实现。
  */
 @InterfaceAudience.LimitedPrivate({HBaseInterfaceAudience.COPROC, HBaseInterfaceAudience.PHOENIX})
 @InterfaceStability.Evolving
 public interface Abortable {
   /**
-   * Abort the server or client.
+   * Abort the server or client.    中止服务器或客户端。
    * @param why Why we're aborting.
    * @param e Throwable that caused abort. Can be null.
    */
   void abort(String why, Throwable e);
 
   /**
-   * Check if the server or client was aborted.
+   * Check if the server or client was aborted. 检查服务器或客户端是否已中止
    * @return true if the server or client was aborted, false otherwise
    */
   boolean isAborted();

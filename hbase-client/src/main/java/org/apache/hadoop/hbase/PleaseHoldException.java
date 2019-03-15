@@ -27,6 +27,8 @@ import org.apache.hadoop.hbase.HBaseIOException;
  * restarted so fast that the master still hasn't processed the server shutdown
  * of the first instance, or when master is initializing and client call admin
  * operations, or when an operation is performed on a region server that is still starting.
+ * 这个异常的主人当地区服务器被关闭并重新启动太快,主人还没有处理第一个实例的服务器关闭,
+ * 或者当主人是初始化和客户端调用管理操作,或者当一个地区服务器上执行一个操作,仍然是开始。
  */
 @SuppressWarnings("serial")
 @InterfaceAudience.Public

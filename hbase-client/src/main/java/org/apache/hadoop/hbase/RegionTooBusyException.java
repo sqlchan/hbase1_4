@@ -26,6 +26,8 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
  * Thrown by a region server if it will block and wait to serve a request.
  * For example, the client wants to insert something to a region while the
  * region is compacting.
+ * 由区域服务器抛出，如果它将阻塞并等待服务请求。
+ * 例如，客户端希望在区域压缩时向区域插入一些内容。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Evolving

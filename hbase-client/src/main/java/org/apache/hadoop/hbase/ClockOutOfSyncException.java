@@ -25,7 +25,7 @@ import org.apache.hadoop.hbase.classification.InterfaceStability;
 
 /**
  * This exception is thrown by the master when a region server clock skew is
- * too high.
+ * too high.    当区域服务器时钟偏差过高时，主节点会抛出此异常。
  */
 @SuppressWarnings("serial")
 @InterfaceAudience.Public

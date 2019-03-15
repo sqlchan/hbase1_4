@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * Thrown during flush if the possibility snapshot content was not properly
  * persisted into store files.  Response should include replay of wal content.
+ * 如果快照内容未正确保存到存储文件中，则在刷新期间引发。应对措施应包括重新播放WAL内容。
  */
 @InterfaceAudience.Public
 @InterfaceStability.Stable

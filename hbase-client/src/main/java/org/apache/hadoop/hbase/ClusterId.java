@@ -28,16 +28,17 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * The identifier for this cluster.
+ * The identifier for this cluster. 此群集的标识符。
  * It is serialized to the filesystem and up into zookeeper.  This is a container for the id.
- * Also knows how to serialize and deserialize the cluster id.
+ * 它被序列化到文件系统并进入zookeeper。这是id的容器。
+ * Also knows how to serialize and deserialize the cluster id.  还知道如何序列化和反序列化集群ID。
  */
 @InterfaceAudience.Private
 public class ClusterId {
   private final String id;
 
   /**
-   * New ClusterID.  Generates a uniqueid.
+   * New ClusterID.  Generates a uniqueid.      新的ClusterID。    生成一个独特的。
    */
   public ClusterId() {
     this(UUID.randomUUID().toString());
@@ -48,7 +49,7 @@ public class ClusterId {
   }
 
   /**
-   * @return The clusterid serialized using pb w/ pb magic prefix
+   * @return The clusterid serialized using pb w/ pb magic prefix   使用pb w / pb魔术前缀序列化的clusterid
    */
   public byte [] toByteArray() {
     return ProtobufUtil.prependPBMagic(convert().toByteArray());

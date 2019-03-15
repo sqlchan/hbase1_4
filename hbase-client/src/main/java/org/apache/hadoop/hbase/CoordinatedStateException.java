@@ -24,6 +24,7 @@ import org.apache.hadoop.hbase.exceptions.HBaseException;
 /**
  * Thrown by operations requiring coordination state access or manipulation
  * when internal error within coordination engine (or other internal implementation) occurs.
+ * 在协调引擎（或其他内部实现）内发生内部错误时，需要协调状态访问或操作的操作引发
  */
 @InterfaceAudience.Private
 @SuppressWarnings("serial")
